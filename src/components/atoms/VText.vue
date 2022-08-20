@@ -50,6 +50,9 @@ export default defineComponent({
   padding: 8px;
   border: 1px solid #CCC;
   border-radius: 3px;
+  &:focus {
+    outline: none;
+  }
 }
 </style>
 
