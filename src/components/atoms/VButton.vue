@@ -37,5 +37,10 @@ export default defineComponent({
   &:hover {
     background-color: #DDD;
   }
+  &:disabled {
+    color: #999;
+    background-color: #CCC;
+    cursor: default;
+  }
 }
 </style>
