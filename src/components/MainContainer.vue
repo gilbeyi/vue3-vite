@@ -10,10 +10,13 @@
       v-if="isConfirm"
       :entry-info="state.entryInfo"
     />
+    <EntryCompleted
+      v-if="isCompleted"
+    />
 
     <div class="button-block">
       <VButton
-        v-if="isConfirm"
+        v-if="!isEntry"
         class="button__back"
         @click="back"
       >
@@ -37,6 +40,7 @@ import { computed, defineComponent, reactive } from 'vue'
 
 import EntryInput from '@/components/entry/EntryInput.vue'
 import EntryConfirm from '@/components/entry/EntryConfirm.vue'
+import EntryCompleted from '@/components/entry/EntryCompleted.vue'
 import VButton from '@/components/atoms/VButton.vue'
 
 import { EntryInformation } from '@/types'
@@ -46,6 +50,7 @@ export default defineComponent({
   components: {
     EntryInput,
     EntryConfirm,
+    EntryCompleted,
     VButton
   },
   setup() {
@@ -86,6 +91,9 @@ export default defineComponent({
     }
 
     const back = () => {
+      if (state.status === ENTRY_STATUS.COMPLETED) {
+        state.entryInfo.name = ''
+      }
       state.status = ENTRY_STATUS.ENTRY
     }
 
