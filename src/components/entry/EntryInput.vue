@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <VText
       :modelValue="entryInfo.name"
       class="text"
@@ -40,6 +40,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  height: 100px;
+}
 .text {
   width: 300px;
 }

@@ -1,8 +1,14 @@
 <template>
   <div>
+    <h1 class="title">Vue3 example</h1>
+
     <EntryInput
       v-if="isEntry"
       v-model:entryInfo="state.entryInfo"
+    />
+    <EntryConfirm
+      v-if="isConfirm"
+      :entry-info="state.entryInfo"
     />
 
     <div class="button-block">
@@ -15,6 +21,8 @@
       </VButton>
 
       <VButton
+        v-if="!isCompleted"
+        :disabled="!isValid"
         class="button"
         @click="click"
       >
@@ -28,6 +36,7 @@
 import { computed, defineComponent, reactive } from 'vue'
 
 import EntryInput from '@/components/entry/EntryInput.vue'
+import EntryConfirm from '@/components/entry/EntryConfirm.vue'
 import VButton from '@/components/atoms/VButton.vue'
 
 import { EntryInformation } from '@/types'
@@ -36,6 +45,7 @@ import { ENTRY_STATUS } from '@/values'
 export default defineComponent({
   components: {
     EntryInput,
+    EntryConfirm,
     VButton
   },
   setup() {
@@ -51,6 +61,12 @@ export default defineComponent({
     })
     const isConfirm = computed(() => {
       return state.status === ENTRY_STATUS.CONFIRM
+    })
+    const isCompleted = computed(() => {
+      return state.status === ENTRY_STATUS.COMPLETED
+    })
+    const isValid = computed(() => {
+      return !!state.entryInfo?.name
     })
     const buttonText = computed(() => {
       return state.status === ENTRY_STATUS.ENTRY
@@ -77,6 +93,8 @@ export default defineComponent({
       state,
       isEntry,
       isConfirm,
+      isCompleted,
+      isValid,
       buttonText,
       click,
       back
@@ -86,6 +104,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.title {
+  margin-bottom: 100px;
+}
+
 .button-block {
   padding: 20px 0;
 }
