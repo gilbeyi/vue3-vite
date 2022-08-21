@@ -1,55 +1,99 @@
 <template>
   <div>
-    <VText
-      v-model="state.value"
-      class="text"
+    <EntryInput
+      v-if="isEntry"
+      v-model:entryInfo="state.entryInfo"
     />
+
     <div class="button-block">
       <VButton
-        class="buton"
+        v-if="isConfirm"
+        class="button__back"
+        @click="back"
+      >
+        back
+      </VButton>
+
+      <VButton
+        class="button"
         @click="click"
       >
-        confirm
+        {{ buttonText }}
       </VButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent, reactive } from 'vue'
 
-import VText from '@/components/atoms/VText.vue'
+import EntryInput from '@/components/entry/EntryInput.vue'
 import VButton from '@/components/atoms/VButton.vue'
+
+import { EntryInformation } from '@/types'
+import { ENTRY_STATUS } from '@/values'
 
 export default defineComponent({
   components: {
-    VText,
+    EntryInput,
     VButton
   },
   setup() {
     const state = reactive({
-      value: ''
+      status: ENTRY_STATUS.ENTRY,
+      entryInfo: {
+        name: ''
+      } as EntryInformation
     })
+
+    const isEntry = computed(() => {
+      return state.status === ENTRY_STATUS.ENTRY
+    })
+    const isConfirm = computed(() => {
+      return state.status === ENTRY_STATUS.CONFIRM
+    })
+    const buttonText = computed(() => {
+      return state.status === ENTRY_STATUS.ENTRY
+        ? 'confirm'
+        : 'complete'
+    })
+
     const click = () => {
-      alert('hello')
+      switch (state.status) {
+        case ENTRY_STATUS.ENTRY:
+          state.status = ENTRY_STATUS.CONFIRM
+          break
+        case ENTRY_STATUS.CONFIRM:
+          state.status = ENTRY_STATUS.COMPLETED
+          break
+      }
+    }
+
+    const back = () => {
+      state.status = ENTRY_STATUS.ENTRY
     }
 
     return {
       state,
-      click
+      isEntry,
+      isConfirm,
+      buttonText,
+      click,
+      back
     }
   },
 })
 </script>
 
 <style lang="scss" scoped>
-.text {
-  width: 300px;
-}
 .button-block {
   padding: 20px 0;
 }
-.buton {
+.button {
   width: 100px;
+  &__back {
+    width: 100px;
+    margin-right: 10px;
+  }
 }
 </style>
