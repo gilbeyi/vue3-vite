@@ -45,6 +45,7 @@ import VButton from '@/components/atoms/VButton.vue'
 
 import { EntryInformation } from '@/types'
 import { ENTRY_STATUS } from '@/values'
+import { useEntryStore } from '@/store'
 
 export default defineComponent({
   components: {
@@ -54,6 +55,8 @@ export default defineComponent({
     VButton
   },
   setup() {
+    const storeEntry = useEntryStore()
+
     const state = reactive({
       status: ENTRY_STATUS.ENTRY,
       entryInfo: {
@@ -85,9 +88,14 @@ export default defineComponent({
           state.status = ENTRY_STATUS.CONFIRM
           break
         case ENTRY_STATUS.CONFIRM:
+          addInfo(state.entryInfo)
           state.status = ENTRY_STATUS.COMPLETED
           break
       }
+    }
+
+    const addInfo = (info: EntryInformation) => {
+      storeEntry.addInfo({...info})
     }
 
     const back = () => {
